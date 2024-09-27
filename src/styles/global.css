@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Global Styles (if needed) */
+
+/* Example of custom global styles */
+body {
+  @apply bg-white text-black; /* Tailwind's utility classes can be applied here */
+  font-family: "Imprima", sans-serif; /* Applying your custom font globally */
+  margin: 0;
+  padding: 0;
+}
+
+/* You can add any additional global styles here */
