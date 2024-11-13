@@ -1,0 +1,7 @@
+.mapContainer,
+#myMap {
+  position: relative;
+  width: 100%;
+  min-width: 290px;
+  height: 600px;
+}

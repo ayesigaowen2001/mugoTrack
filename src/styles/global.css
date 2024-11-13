@@ -1,10 +1,14 @@
+/* Import Azure Maps Drawing Tools and PrimeReact theme first */
+@import "azure-maps-control/dist/atlas.min.css"; /* Ensure you're also importing Azure Maps control */
+@import "azure-maps-drawing-tools/dist/atlas-drawing.min.css";
+@import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
+
+/* Tailwind's base, components, and utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Custom Global Styles (if needed) */
-
-/* Example of custom global styles */
 body {
   @apply bg-white text-black; /* Tailwind's utility classes can be applied here */
   font-family: "Imprima", sans-serif; /* Applying your custom font globally */

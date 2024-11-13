@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
-
+import { Router, useRouter } from "next/router";
 const HomePage: React.FC = () => {
   // Array of text items to display
   const textItems = [
@@ -14,7 +15,13 @@ const HomePage: React.FC = () => {
 
   // State to keep track of the current text item
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const router = useRouter();
+  const goToSignup = () => {
+    router.push("/signUp"); // Navigates to the dashboard
+  };
+  const goToLogIn = () => {
+    router.push("/Login"); // Navigates to the dashboard
+  };
   // Function to change the text item periodically
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -43,10 +50,16 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="flex space-x-4">
-            <button className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]">
+            <button
+              className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
+              onClick={goToLogIn}
+            >
               Login
             </button>
-            <button className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]">
+            <button
+              className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
+              onClick={goToSignup}
+            >
               Sign up
             </button>
           </div>
@@ -66,11 +79,31 @@ const HomePage: React.FC = () => {
       {/* Logo and Branding */}
       <div className="absolute top-4 left-4 flex items-center">
         <div className="relative w-[46px] h-[43.95px] bg-[#8e6c2f] rounded-[30px]">
-          <img
+          {/* <Image
             className="absolute left-[13.42px] top-[7.70px] w-[19.17px] h-[28.87px] rounded-[30px]"
             src="https://img.icons8.com/ios-glyphs/30/bull.png"
             alt="bull"
-          />
+          /> */}
+          <div
+            style={{
+              height: "30.95px",
+              width: "46px",
+              background: "#8E6C2F",
+              marginLeft: "31px",
+              borderRadius: "30px",
+              paddingLeft: "14px",
+              paddingRight: "10px",
+              paddingTop: "4px",
+            }}
+            className="absolute left-[13.42px]"
+          >
+            <Image
+              src="/images/icons/icons8-year-of-ox-30.png"
+              alt="Logo"
+              width={19.17}
+              height={20.87}
+            />
+          </div>
         </div>
         <div className="ml-2 text-[#8e6c2f] text-xl font-normal font-[Imprima]">
           mugoTracker

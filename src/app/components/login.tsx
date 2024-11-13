@@ -1,4 +1,6 @@
 import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const LoginPage: React.FC = () => {
   return (
@@ -8,11 +10,26 @@ const LoginPage: React.FC = () => {
         {/* Logo Section */}
         <div className="w-[98px] h-[75.09px] mx-auto mb-8">
           <div className="w-full h-full bg-[#8e6c2f] rounded-[30px]"></div>
-          <img
-            className="absolute left-[28.58px] top-[13.15px] w-[40.83px] h-[49.33px] rounded-[30px]"
-            src="https://via.placeholder.com/41x49"
-            alt="Logo"
-          />
+          <div
+            style={{
+              height: "30.95px",
+              width: "46px",
+              background: "#8E6C2F",
+              marginLeft: "31px",
+              borderRadius: "30px",
+              paddingLeft: "14px",
+              paddingRight: "10px",
+              paddingTop: "4px",
+            }}
+            className="absolute left-[28.58px]"
+          >
+            <Image
+              src="/images/icons/icons8-year-of-ox-30.png"
+              alt="Logo"
+              width={19.17}
+              height={20.87}
+            />
+          </div>
         </div>
 
         {/* Welcome Back Text */}
@@ -35,7 +52,7 @@ const LoginPage: React.FC = () => {
         {/* Password Input Field */}
         <div className="w-full h-[77px] bg-white rounded-[10px] border border-[#141313] mb-4 p-4">
           <label className="block text-black text-4xl font-normal font-[Imprima] mb-2">
-            Password*
+            Password
           </label>
           <input
             type="password"
@@ -45,9 +62,11 @@ const LoginPage: React.FC = () => {
         </div>
 
         {/* Forgot Password */}
-        <div className="text-center text-black text-[32px] font-normal font-[Imprima] mb-8">
-          Forgot password?
-        </div>
+        <Link href="/resetPassword">
+          <a className="text-center text-black text-[32px] font-normal font-[Imprima] mb-8">
+            Forgot password?
+          </a>
+        </Link>
 
         {/* Continue Button */}
         <button className="w-full h-[79px] bg-[#3f9758] text-white text-4xl font-normal font-[Imprima] rounded-[10px] mb-8">

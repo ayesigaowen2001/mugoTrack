@@ -46,7 +46,8 @@ const NavBar: React.FC = () => {
       style={{
         background: "#F5F5F5",
         width: isOpen ? "236.33px" : "33px",
-        height: "560.64px",
+        height: isOpen ? "560.64px" : "35px",
+        marginTop: isOpen ? "0px" : "10px",
       }}
     >
       <div className="flex flex-row ">
