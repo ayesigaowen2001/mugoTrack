@@ -1,0 +1,2 @@
+# mugoTracker
+Revolutinising wildlife tracking
