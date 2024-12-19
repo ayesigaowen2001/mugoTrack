@@ -4,26 +4,44 @@ import { InputText } from "primereact/inputtext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import login from "../../services/loginService";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
 
   useEffect(() => {
     // Set to true once the component is mounted
     setIsMounted(true);
   }, []);
 
-  const handleLogin = () => {
-    if (email && password) {
-      // Proceed with the login only if the component is mounted (client-side)
-      if (isMounted) {
-        router.push("/dashboard");
-      }
-    } else {
-      alert("Please enter both email and password");
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginData({ ...loginData, [name]: value });
+  };
+  const handleSubmit = async () => {
+    if (!loginData) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    setLoading(true); // Start loading
+
+    try {
+      //const loginData = { email, password };
+      const data = await login(loginData); // Call login service
+      console.log("Login successful:", data);
+      router.push("/dashboard/page"); // Navigate to the dashboard on success
+    } catch (err) {
+      setError(err as string); // Set error message on failure
+      console.error("Login failed:", err);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -65,8 +83,9 @@ const LoginPage: React.FC = () => {
           <span className="p-float-label">
             <InputText
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={loginData.email}
+              onChange={handleLoginChange}
               className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
             />
             <label htmlFor="email" className="text-[15.47px]">
@@ -80,9 +99,10 @@ const LoginPage: React.FC = () => {
           <span className="p-float-label">
             <InputText
               id="password"
-              value={password}
+              name="password"
+              value={loginData.password}
               type="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleLoginChange}
               className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
             />
             <label htmlFor="password" className="text-[15.47px]">
@@ -102,7 +122,7 @@ const LoginPage: React.FC = () => {
         {/* Continue Button */}
         <div
           className="absolute top-[402.53px] w-[260.01px] h-[47.11px] bg-[#3f9758] rounded-md border border-[#201c1c]"
-          onClick={handleLogin}
+          onClick={handleSubmit}
         ></div>
         <div className="absolute left-[88.26px] top-[413.86px] text-black text-[21.47px] font-normal">
           Continue

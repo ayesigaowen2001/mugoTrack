@@ -4,34 +4,53 @@ import { InputText } from "primereact/inputtext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import signUp from "@/src/services/signinService";
 
 const SignUpPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [FirstName, setFirstName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [Animals, setAnimals] = useState<string>("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [first_name, setfirst_name] = useState("");
+  // const [last_name, setlast_name] = useState("");
+  // const [username, setusername] = useState("");
+  // const [num_animals, setnum_animals] = useState<string>("");
+  // const [password, setPassword] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
-
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [signinData, setsigninData] = useState({ email: "", password: "", num_animals: "", username: "",  last_name: "", first_name: "" });
   useEffect(() => {
     // Set to true once the component is mounted
     setIsMounted(true);
   }, []);
 
-  const handleLogin = () => {
-    if (email && password && FirstName && LastName && userName && Animals) {
-      // Proceed with the login only if the component is mounted (client-side)
-      if (isMounted) {
-        router.push("/dashboard/page");
-      }
-    } else {
-      alert("Please enter all fields");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setsigninData({ ...signinData, [name]: value });
+  };
+
+  const handleSubmit = async () => {
+    const { first_name, last_name, username, email, num_animals, password } = signinData;
+
+    if (!first_name || !last_name || !username || !email || !num_animals || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    setLoading(true); // Start loading
+
+    try {
+      const data = await signUp(signinData); // Call signup service
+      console.log("Signup successful:", data);
+      router.push("login/page"); // Navigate to dashboard on success
+    } catch (err) {
+      setError(err as string); // Set error message on failure
+      console.error("Signup failed:", err);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
-  if (!isMounted) return null; // Prevent rendering on the server
+  if (!isMounted) return null; // Prevent server-side rendering
 
   return (
     <div className="w-[950px] h-[620.20px] px-[160px] pt-[10.62px] pb-[29.95px] bg-white flex justify-center items-center ">
@@ -70,9 +89,11 @@ const SignUpPage: React.FC = () => {
             <div className="    w-[260.01px]  h-[47.11px] bg-white rounded-md border border-[#201c1c">
               <span className="p-float-label">
                 <InputText
-                  id="First name"
-                  value={FirstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  id="first_name"
+                  type="text"
+                  value={signinData.first_name}
+                  name="first_name"
+                  onChange={handleInputChange}
                   className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
                 />
                 <label htmlFor="name" className="text-[15.47px]">
@@ -83,9 +104,11 @@ const SignUpPage: React.FC = () => {
             <div className="  w-[260.01px] ml-4 h-[47.11px] bg-white rounded-md border border-[#201c1c">
               <span className="p-float-label">
                 <InputText
-                  id="Last name"
-                  value={LastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  id="last_name"
+                   name ="last_name"
+                   type="text"
+                  value={signinData.last_name}
+                  onChange={handleInputChange}
                   className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
                 />
                 <label htmlFor="email" className="text-[15.47px]">
@@ -100,27 +123,30 @@ const SignUpPage: React.FC = () => {
               <span className="p-float-label">
                 <InputText
                   id="username"
-                  value={userName}
+                  type = "text"
+                  name ="username"
+                  value={signinData.username}
                   // type="password"
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={handleInputChange}
                   className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
                 />
                 <label htmlFor="name" className="text-[15.47px]">
-                  Username
+                  username
                 </label>
               </span>
             </div>
             <div className="  ml-4 w-[260.01px] h-[47.11px] bg-white rounded-md border border-[#201c1c">
               <span className="p-float-label">
                 <InputText
-                  id="animals"
-                  value={Animals}
+                  id="num_animals"
+                  name ="num_animals"
+                  value={signinData.num_animals}
                   type="number"
-                  onChange={(e) => setAnimals(e.target.value)}
+                  onChange={handleInputChange}
                   className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
                 />
-                <label htmlFor="animals" className="text-[15.47px]">
-                  Animals
+                <label htmlFor="num_animals" className="text-[15.47px]">
+                  num_animals
                 </label>
               </span>
             </div>
@@ -130,9 +156,10 @@ const SignUpPage: React.FC = () => {
               <span className="p-float-label">
                 <InputText
                   id="email"
-                  value={email}
+                  name = "email"
+                  value={signinData.email}
                   // type="password"
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleInputChange}
                   className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
                 />
                 <label htmlFor="email" className="text-[15.47px]">
@@ -144,9 +171,10 @@ const SignUpPage: React.FC = () => {
               <span className="p-float-label">
                 <InputText
                   id="password"
-                  value={password}
+                  name="password"
+                  value={signinData.password}
                   type="password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handleInputChange}
                   className="w-[260.01px] h-[47.11px]  px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
                 />
                 <label htmlFor="password" className="text-[15.47px]">
@@ -173,7 +201,7 @@ const SignUpPage: React.FC = () => {
         {/* Continue Button */}
         <div
           className="absolute left-[150.26px] top-[360.53px] w-[260.01px] h-[47.11px] bg-[#3f9758] rounded-md border border-[#201c1c]"
-          onClick={handleLogin}
+          onClick={handleSubmit}
         >
           <h5 className="absolute   px-20 pt-2 text-black text-[21.47px] font-normal">
             Continue

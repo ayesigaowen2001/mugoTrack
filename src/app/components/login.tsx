@@ -1,8 +1,39 @@
-import React from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import login from "../../services/loginService";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 const LoginPage: React.FC = () => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const router = useRouter();
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginData({ ...loginData, [name]: value });
+  };
+  const handleSubmit = async () => {
+    try {
+      const data = await login(loginData);
+      console.log("Login successful:", data);
+      // Handle successful login, e.g., redirect to dashboard
+      router.push("/dashboard/page");
+    } catch (err) {
+      setError(err as string);
+    }
+  };
+
+  setLoading(true);
+  try {
+    // Replace with actual API call
+    console.log("Logging in with", { loginData });
+  } catch (err) {
+    setError("Login failed. Please try again.");
+  } finally {
+    setLoading(false);
+  }
   return (
     <div className="w-full min-h-screen  items-center flex flex-col justify-center  bg-white px-4">
       {/* Main Container */}
@@ -46,6 +77,10 @@ const LoginPage: React.FC = () => {
             type="text"
             className="w-full p-2 text-black text-4xl font-normal font-[Imprima] border-none outline-none"
             placeholder="Enter your email"
+            value={loginData.email}
+            onChange={(e) => {
+              handleLoginChange;
+            }}
           />
         </div>
 
@@ -58,6 +93,9 @@ const LoginPage: React.FC = () => {
             type="password"
             className="w-full p-2 text-black text-4xl font-normal font-[Imprima] border-none outline-none"
             placeholder="Enter your password"
+            value={loginData.password}
+            autoComplete="current-password"
+            onChange={handleLoginChange}
           />
         </div>
 
@@ -69,7 +107,11 @@ const LoginPage: React.FC = () => {
         </Link>
 
         {/* Continue Button */}
-        <button className="w-full h-[79px] bg-[#3f9758] text-white text-4xl font-normal font-[Imprima] rounded-[10px] mb-8">
+
+        <button
+          className="w-full h-[79px] bg-[#3f9758] text-white text-4xl font-normal font-[Imprima] rounded-[10px] mb-8"
+          onClick={handleSubmit}
+        >
           Continue
         </button>
 
@@ -83,5 +125,4 @@ const LoginPage: React.FC = () => {
     </div>
   );
 };
-
 export default LoginPage;
