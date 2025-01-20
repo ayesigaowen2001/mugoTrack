@@ -6,7 +6,7 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { reducer, initialState, Tag } from "../Reducers/viewTagsreducer"; 
+import { reducer, initialState, Tag  } from "../Reducers/viewTagsReducer"; 
 
 const ViewTags: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);

@@ -50,8 +50,8 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuItemSelect }) => {
     <div
       style={{
         background: "#F5F5F5",
-        width: isOpen ? "236.33px" : "33px",
-        height: isOpen ? "560.64px" : "35px",
+        width: isOpen ? "236.33px" : "0px",
+        height: isOpen ? "650.64px" : "0px",
         marginTop: isOpen ? "0px" : "10px",
       }}
     >
@@ -101,17 +101,17 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuItemSelect }) => {
       </div>
 
       <div className={`flex font-['Imprima'] ${isOpen ? "block" : "hidden"}`}>
-        <div className="p-4">
+        <div className="p-9">
           {menuItems.map((menu, index) => (
             <div key={menu.title}>
-              {index > 0 && (
+              {/* {index > 0 && (
                 <Divider
                   style={{ width: "230px" }}
                   className="bg-green-600"
                   layout="horizontal"
                   type="solid"
                 />
-              )}
+              )} */}
               <h4 className="text-base font-semibold ml-4 mt-2">
                 {menu.title}
               </h4>

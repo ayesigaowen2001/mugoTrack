@@ -1,19 +1,32 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Filter from "./filter";
 import Image from "next/image"; // Use Next.js Image component
+import FilteredMapComponent from "./filteredMap";
 
 const BasicMapComponent = dynamic(() => import("./location"), { ssr: false });
 const CreateTags = dynamic(() => import("./createTags"), { ssr: false });
 const ViewTags = dynamic(() => import("./viewTags"), { ssr: false });
+const Geofence = dynamic(() => import("./geoFence"), { ssr: false });
 
 interface MainContentProps {
   selectedItem: string;
+  setFilteredData: React.Dispatch<React.SetStateAction<any[]>>; // New prop
+  filteredData: any[]; // New prop
 }
 
-const MainContent: React.FC<MainContentProps> = ({ selectedItem }) => {
+const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
+  
+  setFilteredData,
+  filteredData, }) => {const [filterApplied, setFilterApplied] = useState(false);
+    const handleFilterApply = (applied: boolean) => {
+      setFilterApplied(applied);
+    };
+    useEffect(() => {
+      console.log("Filtered Data in Map Component:", filteredData);
+    }, [filteredData]);
   const renderContent = () => {
     switch (selectedItem) {
       case "View location":
@@ -28,12 +41,19 @@ const MainContent: React.FC<MainContentProps> = ({ selectedItem }) => {
                 className="mt-5 mb-5 ml-10"
               />
             </div>
-            <Filter />
-            <BasicMapComponent />
+            <Filter
+              setFilteredData={setFilteredData}
+              onFilterApply={handleFilterApply} // Pass the callback
+            />
+            {filterApplied ? (
+              <FilteredMapComponent filteredData={filteredData} />
+            ) : (
+              <BasicMapComponent />
+            )}
           </>
         );
       case "Geofence":
-        return <div>Geofence Component</div>;
+        return <Geofence/>
       case "Track":
         return <div>Track Component</div>;
       case "Create tags":

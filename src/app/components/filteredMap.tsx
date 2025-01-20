@@ -1,35 +1,37 @@
 "use client";
 
-import React, { useContext, useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as atlas from "azure-maps-control";
-import MapControls from "./mapControls"; // Import the MapControls component
-import { AnimalContext, AnimalContextType } from "./customerResourcesContext";
+import MapControls from "./mapControls"; // Import MapControls component
 
-const BasicMapComponent: React.FC = () => {
+interface BasicMapProps {
+  filteredData: any[]; // Accept filtered data as a prop
+}
+
+const FilteredMapComponent: React.FC<BasicMapProps> = ({ filteredData }) => {
   const mapRef = useRef<atlas.Map | null>(null);
   const divRef = useRef<HTMLDivElement | null>(null);
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-
-  const { animalData } = useContext<AnimalContextType>(AnimalContext);
   const [error, setError] = useState<string | null>(null);
 
-  const getLastGpsLocations = useCallback(() => {
-    return animalData?.resources?.animals
-      ?.map((animal) => {
-        const gpsLocations = animal.gps_locations;
-        if (gpsLocations && gpsLocations.length > 0) {
-          return {
-            name: animal.animal_name,
-            species: animal.animal_species,
-            number: animal.animal_number,
-            ...gpsLocations[gpsLocations.length - 1], // Last GPS location
-          };
-        }
-        return null;
-      })
-      .filter(Boolean);
-  }, [animalData]);
-
+  const processAnimalLocations = useCallback(() => {
+    return filteredData?.map((animal) => {
+      const gpsLocations = animal.gps_locations;
+      if (gpsLocations && gpsLocations.length > 0) {
+        return {
+          name: animal.animal_name,
+          species: animal.animal_species,
+          number: animal.animal_number,
+          ...gpsLocations[gpsLocations.length - 1], // Last GPS location
+        };
+      }
+      
+      return null;
+    }).filter(Boolean);
+  }, [filteredData]);
+useEffect(() => {
+  console.log("Filtered Data in Map Component:", filteredData);
+}, [filteredData]);
   useEffect(() => {
     if (typeof window !== "undefined" && divRef.current && !mapRef.current) {
       try {
@@ -43,18 +45,16 @@ const BasicMapComponent: React.FC = () => {
         });
 
         mapRef.current = map;
-
+        
         map.events.add("ready", () => {
-          console.log("Map is ready");
+          const locations = processAnimalLocations();
 
-          const lastGpsLocations = getLastGpsLocations();
-          if (lastGpsLocations && lastGpsLocations.length > 0) {
-            lastGpsLocations.forEach((location) => {
+          if (locations && locations.length > 0) {
+            locations.forEach((location) => {
               if (location) {
                 const longitude = parseFloat(location.longitude ?? "0");
                 const latitude = parseFloat(location.latitude ?? "0");
 
-                // Create a popup for each marker
                 const popup = new atlas.Popup({
                   content: `
                     <div style="padding: 10px;">
@@ -64,19 +64,16 @@ const BasicMapComponent: React.FC = () => {
                       <p><b>Coordinates:</b> (${latitude}, ${longitude})</p>
                     </div>
                   `,
-                  pixelOffset: [0, -30], // Offset the popup to appear above the marker
+                  pixelOffset: [0, -30],
                 });
 
-                // Create an HTML marker with a consistent style and a label above it
                 const marker = new atlas.HtmlMarker({
                   position: [longitude, latitude],
                   htmlContent: `
                     <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
-                      <!-- Name Label -->
                       <div style="background-color: #0078D4; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-bottom: 6px;">
                         ${location.name ?? "Unknown"}
                       </div>
-                      <!-- Circular Marker -->
                       <div style="
                         width: 16px;
                         height: 16px;
@@ -89,7 +86,6 @@ const BasicMapComponent: React.FC = () => {
                   `,
                 });
 
-                // Add a click event listener to the marker to show the popup
                 map.events.add("click", marker, () => {
                   popup.setOptions({
                     position: [longitude, latitude],
@@ -101,12 +97,9 @@ const BasicMapComponent: React.FC = () => {
               }
             });
 
-            // Center map around the markers
-            const positions = lastGpsLocations
-              .map((loc) =>
-                loc ? [parseFloat(loc.longitude ?? "0"), parseFloat(loc.latitude ?? "0")] : null
-              )
-              .filter(Boolean) as atlas.data.Position[];
+            const positions = locations.map((loc) =>
+              loc ? [parseFloat(loc.longitude ?? "0"), parseFloat(loc.latitude ?? "0")] : null
+            ).filter(Boolean) as atlas.data.Position[];
 
             if (positions.length > 0) {
               map.setCamera({
@@ -118,9 +111,7 @@ const BasicMapComponent: React.FC = () => {
         });
 
         map.events.add("error", (e) => {
-          setError(
-            "Map failed to load. Please check the API key or network connection."
-          );
+          setError("Map failed to load. Please check the API key or network connection.");
           console.error("Map rendering error: ", e);
         });
       } catch (err) {
@@ -134,7 +125,7 @@ const BasicMapComponent: React.FC = () => {
         mapRef.current.dispose();
       }
     };
-  }, [apiKey, animalData, getLastGpsLocations]);
+  }, [apiKey, processAnimalLocations]);
 
   return (
     <div>
@@ -158,5 +149,4 @@ const BasicMapComponent: React.FC = () => {
   );
 };
 
-export default BasicMapComponent;
-
+export default FilteredMapComponent;

@@ -1,22 +1,29 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { InputText } from "primereact/inputtext";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import login from "../../services/loginService";
+import { AnimalContext } from "@/src/app/components/customerResourcesContext";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const LoginPage: React.FC = () => {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
   const [isMounted, setIsMounted] = useState(false);
-  const router = useRouter();
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const { animalData, setAnimalData } = useContext(AnimalContext);
+  const router = useRouter();
+
+
 
   useEffect(() => {
-    // Set to true once the component is mounted
+    console.log("Updated animalData:", animalData);
+  }, [animalData]);
+  
+  useEffect(() => {
     setIsMounted(true);
   }, []);
 
@@ -24,31 +31,57 @@ const LoginPage: React.FC = () => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
   };
-  const handleSubmit = async () => {
-    if (!loginData) {
-      alert("Please enter both email and password.");
-      return;
-    }
 
-    setLoading(true); // Start loading
-
+  const performLogin = async () => {
     try {
-      //const loginData = { email, password };
-      const data = await login(loginData); // Call login service
-      console.log("Login successful:", data);
-      router.push("/dashboard/page"); // Navigate to the dashboard on success
-    } catch (err) {
-      setError(err as string); // Set error message on failure
-      console.error("Login failed:", err);
+      setLoading(true);
+
+      const response = await axios.post(`${API_BASE_URL}/customers/login`, loginData);
+      if (response.status === 200) {
+        const sessionToken = response.data.access_token;
+        const customerId = response.data.customer_id;
+        console.log(response.data)
+        const resourcesResponse = await axios.get(
+          `${API_BASE_URL}/customer-resources/${customerId}`,
+          {
+            headers: {
+              token: sessionToken,
+              customer_id: customerId,
+            },
+          }
+        );
+
+        if (resourcesResponse.status === 200) {
+          setAnimalData(resourcesResponse.data);
+          console.log(resourcesResponse.data)
+          router.push("/dashboard/page");
+        } else {
+          throw new Error("Failed to retrieve customer resources.");
+        }
+      } else {
+        throw new Error("Login failed.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please check your credentials.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
+  const handleSubmit = () => {
+    if (!loginData.email || !loginData.password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+    performLogin();
+  };
+console.log(animalData)
   if (!isMounted) return null; // Prevent rendering on the server
 
+
   return (
-    <div className="w-[950px] h-[620.20px] px-[200px] pt-[62.62px] pb-[29.95px] bg-white flex justify-center items-center">
+    <div className="w-[950px] h-[620.20px]  pt-[62.62px] pb-[29.95px] bg-white flex justify-center " style={{marginLeft:"100px"}}>
       <div className="w-[260.01px] h-[527.63px] relative ml-44">
         {/* Logo */}
         <div className="w-[58.44px] h-[44.78px] absolute left-[70.71px] top-10">
