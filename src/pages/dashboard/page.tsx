@@ -1,27 +1,27 @@
 "use client";
+
 import React, { useState } from "react";
-import NavBar from "@/src/app/components/navbar";
+import dynamic from "next/dynamic";
 
-import Filter from "@/src/app/components/filter";
-import MainContent from "@/src/app/components/mainContent";
-import ViewTags from "@/src/app/components/viewTags";
-
+// Dynamically import components with SSR disabled
+const NavBar = dynamic(() => import("@/src/app/components/navbar"), { ssr: false });
+const MainContent = dynamic(() => import("@/src/app/components/mainContent"), { ssr: false });
+// Uncomment the following if you re-enable ViewTags
+// const ViewTags = dynamic(() => import("@/src/app/components/viewTags"), { ssr: false });
 
 const Dashboard: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>("View location");
-  const [filteredData, setFilteredData] = useState<any[]>([]); // Manage filtered data here
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+
   return (
-    
     <div className="flex">
-    <NavBar onMenuItemSelect={setSelectedItem} />
-    <MainContent selectedItem={selectedItem}
-     setFilteredData={setFilteredData}
-     filteredData={filteredData}/>
-    {/* <ViewTags selectedItem={selectedItem}/> */}
-   
-  </div>
- 
+      <NavBar onMenuItemSelect={setSelectedItem} />
+      <MainContent selectedItem={selectedItem} setFilteredData={setFilteredData} filteredData={filteredData} />
+      {/* Uncomment if needed */}
+      {/* <ViewTags selectedItem={selectedItem}/> */}
+    </div>
   );
 };
 
 export default Dashboard;
+
