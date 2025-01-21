@@ -104,7 +104,7 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
       </div>
 
       {/* Filtered Data Display */}
-      <div className="mt-5">
+      {/* <div className="mt-5">
         <h3>Filtered Results:</h3>
         {animals.length > 0 ? (
           <ul>
@@ -118,7 +118,7 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
         ) : (
           <p>No results found.</p>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

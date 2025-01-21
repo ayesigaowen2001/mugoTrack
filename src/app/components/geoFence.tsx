@@ -73,11 +73,11 @@ const Geofence: React.FC = () => {
         >
           Get Drawn Shapes
         </button>
-        {/* <textarea
+        <textarea
           className="w-full h-64 p-2 border rounded-md"
           readOnly
           value={drawnShapes || "No shapes drawn yet."}
-        /> */}
+        />
       </div>
 
       {/* Map Container */}

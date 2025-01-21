@@ -132,6 +132,7 @@ const BasicMapComponent: React.FC = () => {
     return () => {
       if (mapRef.current) {
         mapRef.current.dispose();
+        mapRef.current = null;
       }
     };
   }, [apiKey, animalData, getLastGpsLocations]);
