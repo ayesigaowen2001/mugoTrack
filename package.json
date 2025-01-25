@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "azure-maps-animations": "^0.0.1",
     "azure-maps-control": "^3.3.0",
     "azure-maps-drawing-tools": "^1.0.4",
+    "azure-maps-spatial-io": "^0.1.8",
     "bootstrap": "^5.3.3",
     "line-awesome": "^1.3.0",
     "next": "14.2.7",
@@ -21,7 +23,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.3.0",
-    "react-material-symbols": "^4.4.0"
+    "react-material-symbols": "^4.4.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^20",

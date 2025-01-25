@@ -7,12 +7,7 @@ import { useRouter } from "next/navigation";
 import signUp from "@/src/services/signinService";
 
 const SignUpPage: React.FC = () => {
-  // const [email, setEmail] = useState("");
-  // const [first_name, setfirst_name] = useState("");
-  // const [last_name, setlast_name] = useState("");
-  // const [username, setusername] = useState("");
-  // const [num_animals, setnum_animals] = useState<string>("");
-  // const [password, setPassword] = useState("");
+  
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const [error, setError] = useState("");
@@ -41,7 +36,7 @@ const SignUpPage: React.FC = () => {
     try {
       const data = await signUp(signinData); // Call signup service
       console.log("Signup successful:", data);
-      router.push("login/page"); // Navigate to dashboard on success
+      router.push("login"); // Navigate to dashboard on success
     } catch (err) {
       setError(err as string); // Set error message on failure
       console.error("Signup failed:", err);
@@ -191,7 +186,7 @@ const SignUpPage: React.FC = () => {
             Already have an account?
           </h4>
           <Link
-            href="/login/page"
+            href="/login"
             className=" left-[1.19px]  text-green-800 text-[19.08px] font-normal font-['Imprima']"
           >
             Log in

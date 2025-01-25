@@ -3,27 +3,24 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 const HomePage: React.FC = () => {
   // Array of text items to display
   const textItems = [
-    "Give me ideas for a customer loyalty program in a small bookstore",
-    "Offer discounts for frequent customers",
-    "Create a rewards program where customers earn points with each purchase",
-    "Provide exclusive access to new book releases for loyal customers",
-    "Host special events or book signings for frequent visitors",
+    "Innovative features for an animal tracking system",
+    "GPS-based tracking for real-time location monitoring",
+    "Activity monitoring to analyze animal behavior",
+    "Alerts for unusual movements or boundary breaches",
+    "n app for easy access to tracking data and analytics",
+    "Enabling integration with wildlife conservation databases for better insights",
   ];
+  
 
   // State to keep track of the current text item
   const [currentIndex, setCurrentIndex] = useState(0);
-  const router = useRouter();
+  
   const [isMounted, setIsMounted] = useState(false);
-  const goToSignup = () => {
-    router.push("/signup/page"); // Navigates to the dashboard
-  };
-  const goToLogIn = () => {
-    router.push("/login/page"); // Navigates to the dashboard
-  };
-  // Function to change the text item periodically
+
   useEffect(() => {
     setIsMounted(true); // Set mounted state to true when the component mounts
     const intervalId = setInterval(() => {
@@ -55,18 +52,24 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="flex space-x-4">
-            <button
+          <Link href="/login">
+          <button
               className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
-              onClick={goToLogIn}
+              //onClick={goToLogIn}
             >
               Login
             </button>
+            </Link>
+            
+            <Link href="/signup"> 
             <button
               className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
-              onClick={goToSignup}
+              //onClick={goToSignup}
             >
               Sign up
             </button>
+            </Link>
+           
           </div>
 
           <div className="flex space-x-4 mt-6 text-sm font-normal font-[Imprima] underline">

@@ -1,14 +1,14 @@
 // pages/index.tsx
 import React from "react";
 import HomePage from "../../app/components/home";
-import LoginPage from "../login/page";
+import LoginPage from "../login";
 import { useRouter } from "next/router";
-import Signup from "../signup/page";
+import Signup from "../signup";
 
 const Home: React.FC = () => {
   return (
      <div>
-    <Signup/>
+    <HomePage/>
   </div>
    
   );

@@ -5,12 +5,14 @@ import dynamic from "next/dynamic";
 import Filter from "./filter";
 import Image from "next/image"; // Use Next.js Image component
 import FilteredMapComponent from "./filteredMap";
+//import RouteMap from "./gpsAnimation";
 
 const BasicMapComponent = dynamic(() => import("./location"), { ssr: false });
 const CreateTags = dynamic(() => import("./createTags"), { ssr: false });
 const ViewTags = dynamic(() => import("./viewTags"), { ssr: false });
 const Geofence = dynamic(() => import("./geoFence"), { ssr: false });
-
+const FilterAnimal = dynamic(() => import("./trackAnimal"), { ssr: false });
+const RouteMap = dynamic(() => import("./gpsAnimation"), { ssr: false });
 interface MainContentProps {
   selectedItem: string;
   setFilteredData: React.Dispatch<React.SetStateAction<any[]>>; // New prop
@@ -20,7 +22,10 @@ interface MainContentProps {
 const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
   
   setFilteredData,
-  filteredData, }) => {const [filterApplied, setFilterApplied] = useState(false);
+  filteredData, }) => {
+    const [filterApplied, setFilterApplied] = useState(false);
+    const [gpsLocations, setGpsLocations] = useState<any[]>([]); // Shared state
+
     const handleFilterApply = (applied: boolean) => {
       setFilterApplied(applied);
     };
@@ -55,7 +60,9 @@ const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
       case "Geofence":
         return <Geofence/>
       case "Track":
-        return <div>Track Component</div>;
+        return <>
+        <FilterAnimal setGpsLocations = {setGpsLocations}/>
+        <RouteMap gpsData={gpsLocations}  /></>;
       case "Create tags":
         return <CreateTags />;
       case "View tags":

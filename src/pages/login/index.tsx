@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const { animalData, setAnimalData } = useContext(AnimalContext);
+  const { animalData, setAnimalData, setUserData , userData} = useContext(AnimalContext);
   const router = useRouter();
 
 
@@ -22,7 +22,9 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     console.log("Updated animalData:", animalData);
   }, [animalData]);
-  
+  useEffect(() => {
+    console.log("Updated userData:", userData);
+  }, [userData]);
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -41,6 +43,10 @@ const LoginPage: React.FC = () => {
         const sessionToken = response.data.access_token;
         const customerId = response.data.customer_id;
         console.log(response.data)
+        setUserData({
+          customer_id: customerId,
+          access_token: sessionToken,
+        });
         const resourcesResponse = await axios.get(
           `${API_BASE_URL}/customer-resources/${customerId}`,
           {
@@ -54,7 +60,7 @@ const LoginPage: React.FC = () => {
         if (resourcesResponse.status === 200) {
           setAnimalData(resourcesResponse.data);
           console.log(resourcesResponse.data)
-          router.push("/dashboard/page");
+          router.push("/dashboard");
         } else {
           throw new Error("Failed to retrieve customer resources.");
         }
@@ -65,7 +71,7 @@ const LoginPage: React.FC = () => {
       console.error("Login error:", error);
       alert("Login failed. Please check your credentials.");
     } finally {
-      setLoading(false);
+      setLoading(true);
     }
   };
 
@@ -82,6 +88,7 @@ console.log(animalData)
 
   return (
     <div className="w-[950px] h-[620.20px]  pt-[62.62px] pb-[29.95px] bg-white flex justify-center " style={{marginLeft:"100px"}}>
+      {loading && <div className="absolute top-[144.18px] ml-44 w-[260.01px] h-2  animate-pulse z-50" style={{background: "#8E6C2F"}}></div>}
       <div className="w-[260.01px] h-[527.63px] relative ml-44">
         {/* Logo */}
         <div className="w-[58.44px] h-[44.78px] absolute left-[70.71px] top-10">
