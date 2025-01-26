@@ -49,7 +49,7 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
 
   return (
     <div>
-      <div className="flex rounded-md flex-row bg-gray-100 p-4" style={{ width: "100%" }}>
+      <div className="flex rounded-md flex-row bg-gray-100 p-4 ml-5" style={{ width: "100%" }}>
         {/* Tag ID Dropdown */}
         <div className="flex-col px-2 w-1/3">
           <h3>Tag ID</h3>

@@ -35,6 +35,7 @@ export const fetchGpsLocations = async ({
     });
 
     return response.data;
+    console.log(response.data)
   } catch (error: any) {
     console.error("Error fetching GPS locations:", error);
     throw new Error(

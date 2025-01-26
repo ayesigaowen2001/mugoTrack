@@ -17,12 +17,12 @@ interface MainContentProps {
   selectedItem: string;
   setFilteredData: React.Dispatch<React.SetStateAction<any[]>>; // New prop
   filteredData: any[]; // New prop
+  isSidebarOpen: boolean;
 }
 
 const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
-  
   setFilteredData,
-  filteredData, }) => {
+  filteredData,isSidebarOpen,  }) => {
     const [filterApplied, setFilterApplied] = useState(false);
     const [gpsLocations, setGpsLocations] = useState<any[]>([]); // Shared state
 
@@ -78,9 +78,10 @@ const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
     <div
       style={{
         height: "560.64px",
-        width: "1000px",
-        marginLeft: "5px",
+        width: isSidebarOpen ? "100%" : "calc(100% - 236.33px)",
+        marginLeft: isSidebarOpen ? "5px" : "5px",
         background: "#FFFFFF",
+        transition: "margin-left 0.3s ease, width 0.3s ease",
       }}
     >
       {renderContent()}

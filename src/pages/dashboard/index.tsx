@@ -12,11 +12,15 @@ const MainContent = dynamic(() => import("@/src/app/components/mainContent"), { 
 const Dashboard: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>("View location");
   const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const handleToggleSidebar = (isOpen: boolean) => {
+    setIsSidebarOpen(isOpen);
+  };
 
   return (
     <div className="flex">
-      <NavBar onMenuItemSelect={setSelectedItem} />
-      <MainContent selectedItem={selectedItem} setFilteredData={setFilteredData} filteredData={filteredData} />
+      <NavBar onToggleSidebar={handleToggleSidebar} onMenuItemSelect={setSelectedItem} />
+      <MainContent selectedItem={selectedItem} isSidebarOpen={isSidebarOpen} setFilteredData={setFilteredData} filteredData={filteredData} />
       {/* Uncomment if needed */}
       {/* <ViewTags selectedItem={selectedItem}/> */}
     </div>

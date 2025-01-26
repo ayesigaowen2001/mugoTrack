@@ -77,6 +77,7 @@ const Geofence: React.FC = () => {
           className="w-full h-64 p-2 border rounded-md"
           readOnly
           value={drawnShapes || "No shapes drawn yet."}
+          aria-label="Geofences"
         />
       </div>
 

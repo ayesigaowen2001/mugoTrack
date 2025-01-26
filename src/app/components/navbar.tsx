@@ -6,16 +6,19 @@ import { Divider } from "primereact/divider";
 import Image from "next/image"; // Use Next.js Image component
 
 interface NavBarProps {
-  onMenuItemSelect: (item: string) => void; // Callback to notify selected item
+  onMenuItemSelect: (item: string) => void;
+  onToggleSidebar: (isOpen: boolean) => void; // Notify sidebar state
 }
 
-const NavBar: React.FC<NavBarProps> = ({ onMenuItemSelect }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const NavBar: React.FC<NavBarProps> = ({ onMenuItemSelect,onToggleSidebar }) => {
+  const [isOpen, setIsOpen] = useState(true);
   const [activeItem, setActiveItem] = useState<string >("View location"); // Active menu item
   const [expandedItems, setExpandedItems] = useState<string[]>([]); // Tracks expanded items
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+    onToggleSidebar(!isOpen); // Notify the parent component
+  };
   const handleItemClick = (item: string) => {
     setActiveItem(item); // Set clicked item as active
     onMenuItemSelect(item); // Notify the parent component

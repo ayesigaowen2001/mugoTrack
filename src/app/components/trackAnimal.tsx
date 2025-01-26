@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
@@ -10,14 +10,16 @@ import { fetchGpsLocations } from "@/src/services/animalTrackingService"; // Imp
 interface FilterProps {
   setGpsLocations: React.Dispatch<React.SetStateAction<any[]>>; // State to store the fetched GPS data
 }
-
+;
 const FilterAnimal: React.FC<FilterProps> = ({ setGpsLocations }) => {
   const { animalData, userData } = useContext(AnimalContext); // Access animal and user data from context
   const animals = animalData?.resources.animals || [];
 
   const [animalId, setAnimalId] = useState<string | null>(null);
   const [hours, setHours] = useState<number | null>(null);
-
+  // useEffect(() => {
+  //   console.log("Filtered Data in Map Component:", filteredData);
+  // }, [filteredData])
   // Options for dropdowns (unique values from animal data)
   const animalIdOptions = Array.from(
     new Set(animals.map((animal) => animal.animal_number))
@@ -41,6 +43,7 @@ const FilterAnimal: React.FC<FilterProps> = ({ setGpsLocations }) => {
         access_token: userData.access_token,
       });
       setGpsLocations(gpsLocations); // Pass data to parent state
+      console.log(gpsLocations)
     } catch (error: any) {
       console.error(error.message);
       alert(error.message);
