@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode } from "react";
 
 // Define interfaces for GPS locations, animal data, and user data
 export interface GpsLocation {
@@ -20,8 +20,21 @@ export interface Resources {
   animals: Animal[];
 }
 
-export interface AnimalData {
-  resources: Resources;
+// export interface AnimalData {
+//   resources: Resources;
+// }
+interface AnimalData {
+  profile: {
+    email: string;
+    first_name: string;
+    last_name: string;
+    [key: string]: any; // Optional if there are additional fields
+  };
+  resources: {
+    animals: any[];
+    token: string;
+    workers: any;
+  };
 }
 
 export interface UserData {
@@ -29,15 +42,15 @@ export interface UserData {
   access_token: string | null; // Store the access token for API calls
 }
 
-// Define the context type
+// Define the context type for AnimalContext
 export interface AnimalContextType {
   animalData: AnimalData | null; // `null` initially if no data is available
   userData: UserData;
   setAnimalData: (data: AnimalData) => void;
-  setUserData: (data: any) => void;
+  setUserData: (data: UserData) => void;
 }
 
-// Create context with initial default values
+// Create AnimalContext with initial default values
 export const AnimalContext = createContext<AnimalContextType>({
   animalData: null,
   userData: { customer_id: null, access_token: null },
@@ -56,14 +69,57 @@ export const AnimalProvider: React.FC<AnimalProviderProps> = ({ children }) => {
     access_token: null,
   });
 
-  console.log("Animal Data:", animalData);
-  console.log("User Data:", userData);
-
   return (
     <AnimalContext.Provider
       value={{ animalData, setAnimalData, userData, setUserData }}
     >
       {children}
     </AnimalContext.Provider>
+  );
+};
+
+// --- NotificationContext Implementation ---
+
+// Notification context type
+export interface NotificationContextType {
+  notifications: string[]; // List of notification messages
+  showNotification: (message: string, type?: "success" | "error" | "info") => void;
+  clearNotifications: () => void;
+}
+
+// Create NotificationContext
+export const NotificationContext = createContext<NotificationContextType>({
+  notifications: [],
+  showNotification: () => {},
+  clearNotifications: () => {},
+});
+
+interface NotificationProviderProps {
+  children: ReactNode;
+}
+
+export const NotificationProvider: React.FC<NotificationProviderProps> = ({
+  children,
+}) => {
+  const [notifications, setNotifications] = useState<string[]>([]);
+
+  const showNotification = (
+    message: string,
+    type: "success" | "error" | "info" = "info"
+  ) => {
+    const formattedMessage = `[${type.toUpperCase()}] ${message}`;
+    setNotifications((prev) => [...prev, formattedMessage]);
+  };
+
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
+
+  return (
+    <NotificationContext.Provider
+      value={{ notifications, showNotification, clearNotifications }}
+    >
+      {children}
+    </NotificationContext.Provider>
   );
 };

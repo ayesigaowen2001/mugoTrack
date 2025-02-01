@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Filter from "./filter";
 import Image from "next/image"; // Use Next.js Image component
 import FilteredMapComponent from "./filteredMap";
+//import GpsMonitoringComponent from "./notifications";
 //import RouteMap from "./gpsAnimation";
 
 const BasicMapComponent = dynamic(() => import("./location"), { ssr: false });
@@ -13,6 +14,7 @@ const ViewTags = dynamic(() => import("./viewTags"), { ssr: false });
 const Geofence = dynamic(() => import("./geoFence"), { ssr: false });
 const FilterAnimal = dynamic(() => import("./trackAnimal"), { ssr: false });
 const RouteMap = dynamic(() => import("./gpsAnimation"), { ssr: false });
+const Notifications = dynamic(() => import("./notifications"), { ssr: false });
 interface MainContentProps {
   selectedItem: string;
   setFilteredData: React.Dispatch<React.SetStateAction<any[]>>; // New prop
@@ -67,6 +69,8 @@ const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
         return <CreateTags />;
       case "View tags":
         return <ViewTags />;
+      case "View notifications":
+        return <Notifications />;
       case "Report":
         return <div>Analytics Report</div>;
       default:

@@ -11,7 +11,7 @@ interface FilterProps {
 }
 
 const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
-  const { animalData } = useContext(AnimalContext); // Access context values
+  const { animalData } = useContext(AnimalContext);
   const animals = animalData?.resources.animals || [];
 
   // States for filter inputs
@@ -19,31 +19,31 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
   const [species, setSpecies] = useState<string | null>(null);
   const [gender, setGender] = useState<string | null>(null);
 
-  // Options for dropdowns (unique values from animal data)
-  const tagIdOptions = Array.from(
+  // Options for dropdowns (add "None" option)
+  const tagIdOptions = [{ label: "None", value: null }, ...Array.from(
     new Set(animals.map((animal) => animal.animal_number))
-  ).map((tag) => ({ label: tag, value: tag }));
+  ).map((tag) => ({ label: tag, value: tag }))];
 
-  const speciesOptions = Array.from(
+  const speciesOptions = [{ label: "None", value: null }, ...Array.from(
     new Set(animals.map((animal) => animal.animal_species))
-  ).map((species) => ({ label: species, value: species }));
+  ).map((species) => ({ label: species, value: species }))];
 
-  const genderOptions = Array.from(
+  const genderOptions = [{ label: "None", value: null }, ...Array.from(
     new Set(animals.map((animal) => animal.gender))
-  ).map((gender) => ({ label: gender, value: gender }));
+  ).map((gender) => ({ label: gender, value: gender }))];
 
-  // Filter logic
+  // Corrected Filter Logic
   const handleFilter = () => {
     const filtered = animals.filter((animal) => {
-      const matchesTagId = tagId ? animal.animal_number === tagId : true;
-      const matchesSpecies = species ? animal.animal_species === species : true;
-      const matchesGender = gender ? animal.gender === gender : true;
+      const matchesTagId = tagId !== null ? animal.animal_number === tagId : true;
+      const matchesSpecies = species !== null ? animal.animal_species === species : true;
+      const matchesGender = gender !== null ? animal.gender === gender : true;
       return matchesTagId && matchesSpecies && matchesGender;
     });
 
     setFilteredData(filtered);
     if (onFilterApply) {
-      onFilterApply(true); // Notify parent component
+      onFilterApply(true);
     }
   };
 
@@ -58,7 +58,7 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
             options={tagIdOptions}
             onChange={(e) => setTagId(e.value)}
             placeholder="Select Tag ID"
-            filter // Enables typing and suggestion
+            filter
             className="border rounded-md w-full"
           />
         </div>
@@ -73,7 +73,7 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
             options={speciesOptions}
             onChange={(e) => setSpecies(e.value)}
             placeholder="Select Species"
-            filter // Enables typing and suggestion
+            filter
             className="border rounded-md w-full"
           />
         </div>
@@ -88,7 +88,7 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
             options={genderOptions}
             onChange={(e) => setGender(e.value)}
             placeholder="Select Gender"
-            filter // Enables typing and suggestion
+            filter
             className="border rounded-md w-full"
           />
         </div>
@@ -102,23 +102,6 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
           />
         </div>
       </div>
-
-      {/* Filtered Data Display */}
-      {/* <div className="mt-5">
-        <h3>Filtered Results:</h3>
-        {animals.length > 0 ? (
-          <ul>
-            {animals.map((animal) => (
-              <li key={animal.animal_number}>
-                {animal.animal_number} - {animal.animal_name} -{" "}
-                {animal.animal_species} - {animal.gender}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No results found.</p>
-        )}
-      </div> */}
     </div>
   );
 };
