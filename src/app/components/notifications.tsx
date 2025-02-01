@@ -49,9 +49,9 @@ const Notifications: React.FC = () => {
   };
 
   // Fetch notifications on component mount
-  // useEffect(() => {
-  //   fetchNotifications();
-  // }, []);
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   return (
     <div className="container overflow-scroll">
