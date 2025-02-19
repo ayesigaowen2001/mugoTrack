@@ -12,7 +12,9 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
   const { animalData } = useContext(AnimalContext);
-  const animals = animalData?.resources.animals || [];
+  const animals = Array.isArray(animalData?.resources.animals.data)
+    ? animalData.resources.animals.data
+    : [];
 
   // States for filter inputs
   const [tagId, setTagId] = useState<string | null>(null);
@@ -20,23 +22,34 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
   const [gender, setGender] = useState<string | null>(null);
 
   // Options for dropdowns (add "None" option)
-  const tagIdOptions = [{ label: "None", value: null }, ...Array.from(
-    new Set(animals.map((animal) => animal.animal_number))
-  ).map((tag) => ({ label: tag, value: tag }))];
+  const tagIdOptions = [
+    { label: "None", value: null },
+    ...Array.from(new Set(animals.map((animal) => animal.animal_number))).map(
+      (tag) => ({ label: tag, value: tag })
+    ),
+  ];
 
-  const speciesOptions = [{ label: "None", value: null }, ...Array.from(
-    new Set(animals.map((animal) => animal.animal_species))
-  ).map((species) => ({ label: species, value: species }))];
+  const speciesOptions = [
+    { label: "None", value: null },
+    ...Array.from(new Set(animals.map((animal) => animal.animal_species))).map(
+      (species) => ({ label: species, value: species })
+    ),
+  ];
 
-  const genderOptions = [{ label: "None", value: null }, ...Array.from(
-    new Set(animals.map((animal) => animal.gender))
-  ).map((gender) => ({ label: gender, value: gender }))];
+  const genderOptions = [
+    { label: "None", value: null },
+    ...Array.from(new Set(animals.map((animal) => animal.gender))).map(
+      (gender) => ({ label: gender, value: gender })
+    ),
+  ];
 
-  // Corrected Filter Logic
+  // Dynamic Filter Logic
   const handleFilter = () => {
     const filtered = animals.filter((animal) => {
-      const matchesTagId = tagId !== null ? animal.animal_number === tagId : true;
-      const matchesSpecies = species !== null ? animal.animal_species === species : true;
+      const matchesTagId =
+        tagId !== null ? animal.animal_number === tagId : true;
+      const matchesSpecies =
+        species !== null ? animal.animal_species === species : true;
       const matchesGender = gender !== null ? animal.gender === gender : true;
       return matchesTagId && matchesSpecies && matchesGender;
     });
@@ -49,7 +62,10 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
 
   return (
     <div>
-      <div className="flex rounded-md flex-row bg-gray-100 p-4 ml-5" style={{ width: "100%" }}>
+      <div
+        className="flex rounded-md flex-row bg-gray-100 p-4 ml-5"
+        style={{ width: "100%" }}
+      >
         {/* Tag ID Dropdown */}
         <div className="flex-col px-2 w-1/3">
           <h3>Tag ID</h3>
@@ -60,6 +76,11 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
             placeholder="Select Tag ID"
             filter
             className="border rounded-md w-full"
+          />
+          <Button
+            label="Clear"
+            onClick={() => setTagId(null)}
+            className="p-button-secondary mt-2"
           />
         </div>
 
@@ -76,6 +97,11 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
             filter
             className="border rounded-md w-full"
           />
+          <Button
+            label="Clear"
+            onClick={() => setSpecies(null)}
+            className="p-button-secondary mt-2"
+          />
         </div>
 
         <Divider layout="vertical" className="mx-2" />
@@ -90,6 +116,11 @@ const Filter: React.FC<FilterProps> = ({ setFilteredData, onFilterApply }) => {
             placeholder="Select Gender"
             filter
             className="border rounded-md w-full"
+          />
+          <Button
+            label="Clear"
+            onClick={() => setGender(null)}
+            className="p-button-secondary mt-2"
           />
         </div>
 

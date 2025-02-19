@@ -17,24 +17,24 @@ export interface Animal {
 }
 
 export interface Resources {
-  animals: Animal[];
+  animals: {
+    data: Animal[];
+    limit: number;
+    skip: number;
+    total: number;
+  };
 }
 
-// export interface AnimalData {
-//   resources: Resources;
-// }
 interface AnimalData {
   profile: {
-    email: string;
+    id: number;
+    password: string;
     first_name: string;
-    last_name: string;
+    contact: string;
+    email: string;
     [key: string]: any; // Optional if there are additional fields
   };
-  resources: {
-    animals: any[];
-    token: string;
-    workers: any;
-  };
+  resources: Resources;
 }
 
 export interface UserData {
@@ -83,7 +83,10 @@ export const AnimalProvider: React.FC<AnimalProviderProps> = ({ children }) => {
 // Notification context type
 export interface NotificationContextType {
   notifications: string[]; // List of notification messages
-  showNotification: (message: string, type?: "success" | "error" | "info") => void;
+  showNotification: (
+    message: string,
+    type?: "success" | "error" | "info"
+  ) => void;
   clearNotifications: () => void;
 }
 

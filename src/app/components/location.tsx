@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useContext, useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import * as atlas from "azure-maps-control";
 import MapControls from "./mapControls"; // Import the MapControls component
 import { AnimalContext, AnimalContextType } from "./customerResourcesContext";
@@ -14,7 +20,10 @@ const BasicMapComponent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const getLastGpsLocations = useCallback(() => {
-    return animalData?.resources?.animals
+    const animals = Array.isArray(animalData?.resources?.animals.data)
+      ? animalData.resources.animals.data
+      : [];
+    return animals
       ?.map((animal) => {
         const gpsLocations = animal.gps_locations;
         if (gpsLocations && gpsLocations.length > 0) {
@@ -104,7 +113,12 @@ const BasicMapComponent: React.FC = () => {
             // Center map around the markers
             const positions = lastGpsLocations
               .map((loc) =>
-                loc ? [parseFloat(loc.longitude ?? "0"), parseFloat(loc.latitude ?? "0")] : null
+                loc
+                  ? [
+                      parseFloat(loc.longitude ?? "0"),
+                      parseFloat(loc.latitude ?? "0"),
+                    ]
+                  : null
               )
               .filter(Boolean) as atlas.data.Position[];
 
@@ -160,4 +174,3 @@ const BasicMapComponent: React.FC = () => {
 };
 
 export default BasicMapComponent;
-

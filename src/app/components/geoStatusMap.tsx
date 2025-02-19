@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as atlas from "azure-maps-control";
 
 interface RouteMapProps {
-  gpsData: {
+  geoData: {
     timestamp: string;
     latitude: string;
     longitude: string;
@@ -12,7 +12,7 @@ interface RouteMapProps {
   }[];
 }
 
-const RouteMap: React.FC<RouteMapProps> = ({ gpsData }) => {
+const GeoStatus: React.FC<RouteMapProps> = ({ geoData }) => {
   const mapRef = useRef<atlas.Map | null>(null);
   const divRef = useRef<HTMLDivElement | null>(null);
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
@@ -38,8 +38,8 @@ const RouteMap: React.FC<RouteMapProps> = ({ gpsData }) => {
         mapRef.current = map;
 
         map.events.add("ready", () => {
-          if (gpsData.length > 0) {
-            const positions = gpsData.map((point) => [
+          if (geoData.length > 0) {
+            const positions = geoData.map((point) => [
               parseFloat(point.longitude),
               parseFloat(point.latitude),
             ]);
@@ -116,7 +116,7 @@ const RouteMap: React.FC<RouteMapProps> = ({ gpsData }) => {
         mapRef.current = null;
       }
     };
-  }, [apiKey, gpsData]);
+  }, [apiKey, geoData]);
 
   const calculateRotation = (
     [lng1, lat1]: number[],
@@ -147,4 +147,4 @@ const RouteMap: React.FC<RouteMapProps> = ({ gpsData }) => {
   );
 };
 
-export default RouteMap;
+export default GeoStatus;

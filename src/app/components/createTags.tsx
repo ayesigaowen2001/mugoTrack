@@ -1,5 +1,3 @@
-
-
 "use client";
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
@@ -9,7 +7,11 @@ import * as XLSX from "xlsx";
 import createTag from "@/src/services/createTagService";
 import Image from "next/image";
 const CreateTagPage: React.FC = () => {
-  const [createTagData, setCreateTagData] = useState({ Species: "", Gender: "", Name: "" });
+  const [createTagData, setCreateTagData] = useState({
+    Species: "",
+    Gender: "",
+    Name: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -30,8 +32,11 @@ const CreateTagPage: React.FC = () => {
         const workbook = XLSX.read(binaryStr, { type: "binary" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-        const jsonData: Array<{ Species: string; Gender: string; Name: string }> =
-          XLSX.utils.sheet_to_json(worksheet);
+        const jsonData: Array<{
+          Species: string;
+          Gender: string;
+          Name: string;
+        }> = XLSX.utils.sheet_to_json(worksheet);
         console.log("Parsed Excel Data:", jsonData);
 
         // Automatically call createTag service for each entry
@@ -55,7 +60,11 @@ const CreateTagPage: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!createTagData.Species || !createTagData.Gender || !createTagData.Name) {
+    if (
+      !createTagData.Species ||
+      !createTagData.Gender ||
+      !createTagData.Name
+    ) {
       alert("Please enter Species, Gender, and Name.");
       return;
     }
@@ -147,15 +156,15 @@ const CreateTagPage: React.FC = () => {
             onChange={handleFileUpload}
           />
           <Image
-                        src="/images/icons/excel.png"
-                        alt="Logo"
-                        width={30.17}
-                        height={30.87}
-                      />
+            src="/images/icons/excel.png"
+            alt="Logo"
+            width={30.17}
+            height={30.87}
+          />
           <label
             htmlFor="excelFile"
             className="flex items-center cursor-pointer bg-white rounded-md  px-3 py-1 text-[#3f9758]"
-            style = {{width: "50px"}}
+            style={{ width: "50px" }}
           >
             {/* <AiOutlineFileExcel className="mr-2 text-xl" /> */}
             Create multiple Tags

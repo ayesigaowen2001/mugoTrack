@@ -2,19 +2,19 @@ import axios from "axios";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL; // Store API base URL in .env
 
-interface FetchGpsLocationsParams {
+interface FetchGeoLocationsParams {
   animalId: string;
   customerId: number;
   hours: number;
   access_token: string;
 }
 
-export const fetchGpsLocations = async ({
+export const fetchGeoLocations = async ({
   animalId,
   customerId,
   hours,
   access_token,
-}: FetchGpsLocationsParams): Promise<any[]> => {
+}: FetchGeoLocationsParams): Promise<any[]> => {
   if (!animalId || !customerId || !hours || !access_token) {
     throw new Error("Animal ID, Customer ID, and Hours are required.");
   }

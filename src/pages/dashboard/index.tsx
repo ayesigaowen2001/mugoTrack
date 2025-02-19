@@ -4,8 +4,12 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamically import components with SSR disabled
-const NavBar = dynamic(() => import("@/src/app/components/navbar"), { ssr: false });
-const MainContent = dynamic(() => import("@/src/app/components/mainContent"), { ssr: false });
+const NavBar = dynamic(() => import("@/src/app/components/navbar"), {
+  ssr: false,
+});
+const MainContent = dynamic(() => import("@/src/app/components/mainContent"), {
+  ssr: false,
+});
 // Uncomment the following if you re-enable ViewTags
 // const ViewTags = dynamic(() => import("@/src/app/components/viewTags"), { ssr: false });
 
@@ -19,8 +23,16 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex">
-      <NavBar onToggleSidebar={handleToggleSidebar} onMenuItemSelect={setSelectedItem} />
-      <MainContent selectedItem={selectedItem} isSidebarOpen={isSidebarOpen} setFilteredData={setFilteredData} filteredData={filteredData} />
+      <NavBar
+        onToggleSidebar={handleToggleSidebar}
+        onMenuItemSelect={setSelectedItem}
+      />
+      <MainContent
+        selectedItem={selectedItem}
+        isSidebarOpen={isSidebarOpen}
+        setFilteredData={setFilteredData}
+        filteredData={filteredData}
+      />
       {/* Uncomment if needed */}
       {/* <ViewTags selectedItem={selectedItem}/> */}
     </div>
@@ -28,4 +40,3 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
-

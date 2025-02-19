@@ -10,9 +10,12 @@ interface NavBarProps {
   onToggleSidebar: (isOpen: boolean) => void; // Notify sidebar state
 }
 
-const NavBar: React.FC<NavBarProps> = ({ onMenuItemSelect,onToggleSidebar }) => {
+const NavBar: React.FC<NavBarProps> = ({
+  onMenuItemSelect,
+  onToggleSidebar,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [activeItem, setActiveItem] = useState<string >("View location"); // Active menu item
+  const [activeItem, setActiveItem] = useState<string>("View location"); // Active menu item
   const [expandedItems, setExpandedItems] = useState<string[]>([]); // Tracks expanded items
 
   const toggleSidebar = () => {
@@ -33,7 +36,10 @@ const NavBar: React.FC<NavBarProps> = ({ onMenuItemSelect,onToggleSidebar }) => 
   };
 
   const menuItems = [
-    { title: "Map", items: ["View location", "Geofence", "Track"] },
+    {
+      title: "Map",
+      items: ["View location", "Geofence", "Track", "Geo-Status"],
+    },
     { title: "Tags", items: ["Create tags", "View tags"] },
     { title: "Notifications", items: ["View notifications"] },
     { title: "Analytics", items: ["Report"] },

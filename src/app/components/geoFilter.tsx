@@ -5,12 +5,12 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { AnimalContext } from "./customerResourcesContext"; // Adjust the path to your context
-import { fetchGpsLocations } from "@/src/services/animalTrackingService"; // Import the service function
+import { fetchGeoLocations } from "@/src/services/geostatusService"; // Import the service function
 
 interface FilterProps {
-  setGpsLocations: React.Dispatch<React.SetStateAction<any[]>>; // State to store the fetched GPS data
+  setGeoLocations: React.Dispatch<React.SetStateAction<any[]>>; // State to store the fetched GPS data
 }
-const FilterAnimal: React.FC<FilterProps> = ({ setGpsLocations }) => {
+const Geofilter: React.FC<FilterProps> = ({ setGeoLocations }) => {
   const { animalData, userData } = useContext(AnimalContext); // Access animal and user data from context
   const animals = Array.isArray(animalData?.resources.animals)
     ? animalData.resources.animals
@@ -37,13 +37,13 @@ const FilterAnimal: React.FC<FilterProps> = ({ setGpsLocations }) => {
     }
     console.log(userData);
     try {
-      const gpsLocations = await fetchGpsLocations({
+      const gpsLocations = await fetchGeoLocations({
         animalId,
         customerId: userData.customer_id, // Use customer_id from context
         hours,
         access_token: userData.access_token,
       });
-      setGpsLocations(gpsLocations); // Pass data to parent state
+      setGeoLocations(gpsLocations); // Pass data to parent state
       console.log(gpsLocations);
     } catch (error: any) {
       console.error(error.message);
@@ -92,4 +92,4 @@ const FilterAnimal: React.FC<FilterProps> = ({ setGpsLocations }) => {
   );
 };
 
-export default FilterAnimal;
+export default Geofilter;

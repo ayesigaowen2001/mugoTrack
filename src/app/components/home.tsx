@@ -14,11 +14,10 @@ const HomePage: React.FC = () => {
     "n app for easy access to tracking data and analytics",
     "Enabling integration with wildlife conservation databases for better insights",
   ];
-  
 
   // State to keep track of the current text item
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -29,7 +28,7 @@ const HomePage: React.FC = () => {
 
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, [textItems.length]);
-  
+
   if (!isMounted) {
     return null; // Prevent rendering until the component is mounted
   }
@@ -52,24 +51,23 @@ const HomePage: React.FC = () => {
           </div>
 
           <div className="flex space-x-4">
-          <Link href="/login">
-          <button
-              className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
-              //onClick={goToLogIn}
-            >
-              Login
-            </button>
+            <Link href="/login">
+              <button
+                className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
+                //onClick={goToLogIn}
+              >
+                Login
+              </button>
             </Link>
-            
-            <Link href="/signup"> 
-            <button
-              className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
-              //onClick={goToSignup}
-            >
-              Sign up
-            </button>
+
+            <Link href="/signup">
+              <button
+                className="w-[181px] h-[39px] bg-[#3f9758] rounded-[10px] text-white text-2xl font-normal font-[Imprima]"
+                //onClick={goToSignup}
+              >
+                Sign up
+              </button>
             </Link>
-           
           </div>
 
           <div className="flex space-x-4 mt-6 text-sm font-normal font-[Imprima] underline">
@@ -85,9 +83,11 @@ const HomePage: React.FC = () => {
       </div>
 
       {/* Logo and Branding */}
-      <div className="absolute top-4 left-3   flex-row " style={{width: "150px"}}>
-        <div >
-          
+      <div
+        className="absolute top-4 left-3   flex-row "
+        style={{ width: "150px" }}
+      >
+        <div>
           <div
             style={{
               height: "30.95px",
@@ -109,7 +109,7 @@ const HomePage: React.FC = () => {
             />
           </div>
         </div>
-        <div className="  ml-12 text-[#8e6c2f] text-xl font-normal font-[Imprima]" >
+        <div className="  ml-12 text-[#8e6c2f] text-xl font-normal font-[Imprima]">
           mugoTracker
         </div>
       </div>

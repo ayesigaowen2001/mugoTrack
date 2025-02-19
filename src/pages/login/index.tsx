@@ -14,10 +14,9 @@ const LoginPage: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const { animalData, setAnimalData, setUserData , userData} = useContext(AnimalContext);
+  const { animalData, setAnimalData, setUserData, userData } =
+    useContext(AnimalContext);
   const router = useRouter();
-
-
 
   useEffect(() => {
     console.log("Updated animalData:", animalData);
@@ -28,6 +27,34 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+  useEffect(() => {
+    if (userData.customer_id && userData.access_token) {
+      const intervalId = setInterval(async () => {
+        try {
+          const resourcesResponse = await axios.get(
+            `${API_BASE_URL}/customer-resources/${userData.customer_id}`,
+            {
+              headers: {
+                token: userData.access_token,
+                customer_id: userData.customer_id,
+              },
+            }
+          );
+
+          if (resourcesResponse.status === 200) {
+            setAnimalData(resourcesResponse.data);
+            console.log("Updated animalData:", resourcesResponse.data);
+          } else {
+            throw new Error("Failed to retrieve customer resources.");
+          }
+        } catch (error) {
+          console.error("Error fetching customer resources:", error);
+        }
+      }, 30000); // 30 seconds
+
+      return () => clearInterval(intervalId);
+    }
+  }, [userData, setAnimalData]);
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,11 +65,14 @@ const LoginPage: React.FC = () => {
     try {
       setLoading(true);
 
-      const response = await axios.post(`${API_BASE_URL}/customers/login`, loginData);
+      const response = await axios.post(
+        `${API_BASE_URL}/customers/login`,
+        loginData
+      );
       if (response.status === 200) {
         const sessionToken = response.data.access_token;
         const customerId = response.data.customer_id;
-        console.log(response.data)
+        console.log(response.data);
         setUserData({
           customer_id: customerId,
           access_token: sessionToken,
@@ -59,7 +89,7 @@ const LoginPage: React.FC = () => {
 
         if (resourcesResponse.status === 200) {
           setAnimalData(resourcesResponse.data);
-          console.log(resourcesResponse.data)
+          console.log(resourcesResponse.data);
           router.push("/dashboard");
         } else {
           throw new Error("Failed to retrieve customer resources.");
@@ -82,13 +112,20 @@ const LoginPage: React.FC = () => {
     }
     performLogin();
   };
-console.log(animalData)
+  console.log(animalData);
   if (!isMounted) return null; // Prevent rendering on the server
 
-
   return (
-    <div className="w-[950px] h-[620.20px]  pt-[62.62px] pb-[29.95px] bg-white flex justify-center " style={{marginLeft:"100px"}}>
-      {loading && <div className="absolute top-[144.18px] ml-44 w-[260.01px] h-2  animate-pulse z-50" style={{background: "#8E6C2F"}}></div>}
+    <div
+      className="w-[950px] h-[620.20px]  pt-[62.62px] pb-[29.95px] bg-white flex justify-center "
+      style={{ marginLeft: "100px" }}
+    >
+      {loading && (
+        <div
+          className="absolute top-[144.18px] ml-44 w-[260.01px] h-2  animate-pulse z-50"
+          style={{ background: "#8E6C2F" }}
+        ></div>
+      )}
       <div className="w-[260.01px] h-[527.63px] relative ml-44">
         {/* Logo */}
         <div className="w-[58.44px] h-[44.78px] absolute left-[70.71px] top-10">

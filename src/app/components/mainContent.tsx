@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Filter from "./filter";
 import Image from "next/image"; // Use Next.js Image component
 import FilteredMapComponent from "./filteredMap";
+import Geofilter from "./geoFilter";
 //import GpsMonitoringComponent from "./notifications";
 //import RouteMap from "./gpsAnimation";
 
@@ -15,6 +16,7 @@ const Geofence = dynamic(() => import("./geoFence"), { ssr: false });
 const FilterAnimal = dynamic(() => import("./trackAnimal"), { ssr: false });
 const RouteMap = dynamic(() => import("./gpsAnimation"), { ssr: false });
 const Notifications = dynamic(() => import("./notifications"), { ssr: false });
+const GeoStatus = dynamic(() => import("./geoStatusMap"), { ssr: false });
 interface MainContentProps {
   selectedItem: string;
   setFilteredData: React.Dispatch<React.SetStateAction<any[]>>; // New prop
@@ -22,18 +24,21 @@ interface MainContentProps {
   isSidebarOpen: boolean;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
+const MainContent: React.FC<MainContentProps> = ({
+  selectedItem,
   setFilteredData,
-  filteredData,isSidebarOpen,  }) => {
-    const [filterApplied, setFilterApplied] = useState(false);
-    const [gpsLocations, setGpsLocations] = useState<any[]>([]); // Shared state
-
-    const handleFilterApply = (applied: boolean) => {
-      setFilterApplied(applied);
-    };
-    useEffect(() => {
-      console.log("Filtered Data in Map Component:", filteredData);
-    }, [filteredData]);
+  filteredData,
+  isSidebarOpen,
+}) => {
+  const [filterApplied, setFilterApplied] = useState(false);
+  const [gpsLocations, setGpsLocations] = useState<any[]>([]); // Shared state
+  const [geoLocations, setGeoLocations] = useState<any[]>([]);
+  const handleFilterApply = (applied: boolean) => {
+    setFilterApplied(applied);
+  };
+  useEffect(() => {
+    console.log("Filtered Data in Map Component:", filteredData);
+  }, [filteredData]);
   const renderContent = () => {
     switch (selectedItem) {
       case "View location":
@@ -60,11 +65,14 @@ const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
           </>
         );
       case "Geofence":
-        return <Geofence/>
+        return <Geofence />;
       case "Track":
-        return <>
-        <FilterAnimal setGpsLocations = {setGpsLocations}/>
-        <RouteMap gpsData={gpsLocations}  /></>;
+        return (
+          <>
+            <FilterAnimal setGpsLocations={setGpsLocations} />
+            <RouteMap gpsData={gpsLocations} />
+          </>
+        );
       case "Create tags":
         return <CreateTags />;
       case "View tags":
@@ -73,6 +81,13 @@ const MainContent: React.FC<MainContentProps> = ({ selectedItem ,
         return <Notifications />;
       case "Report":
         return <div>Analytics Report</div>;
+      case "Geo-Status":
+        return (
+          <>
+            <Geofilter setGeoLocations={setGeoLocations} />
+            <GeoStatus geoData={geoLocations} />
+          </>
+        );
       default:
         return <div>Content Not Available</div>;
     }
