@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
     "GPS-based tracking for real-time location monitoring",
     "Activity monitoring to analyze animal behavior",
     "Alerts for unusual movements or boundary breaches",
-    "n app for easy access to tracking data and analytics",
+    "An app for easy access to tracking data and analytics",
     "Enabling integration with wildlife conservation databases for better insights",
   ];
 
@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
       {/* Main Content Wrapper */}
       <div className="w-full h-full max-w-[1440px] max-h-[876px] flex flex-col lg:flex-row">
         {/* Left Section (50px wider than right section) */}
-        <div className="w-full lg:w-[calc(50%+25px)] h-full bg-neutral-100 flex items-center justify-center">
+        <div className="w-full ml-0 lg:w-[calc(50%+25px)] h-full bg-neutral-100 flex items-center justify-center">
           {/* Sliding Text */}
           <div className="text-[#8e6c2f] text-2xl font-normal text-center font-[Imprima] animate-slide">
             {textItems[currentIndex]}

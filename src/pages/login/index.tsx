@@ -117,8 +117,8 @@ const LoginPage: React.FC = () => {
 
   return (
     <div
-      className="w-[950px] h-[620.20px]  pt-[62.62px] pb-[29.95px] bg-white flex justify-center "
-      style={{ marginLeft: "100px" }}
+      className="w-full h-full pt-[62.62px] pb-[29.95px] bg-white flex justify-center "
+      // style={{ marginLeft: "100px" }}
     >
       {loading && (
         <div
