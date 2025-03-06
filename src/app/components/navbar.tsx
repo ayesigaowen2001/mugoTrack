@@ -60,9 +60,10 @@ const NavBar: React.FC<NavBarProps> = ({
       style={{
         background: "#F5F5F5",
         width: isOpen ? "236.33px" : "0px",
-        height: isOpen ? "650.64px" : "0px",
+        height: isOpen ? "h-full" : "0px",
         marginTop: isOpen ? "0px" : "10px",
       }}
+      className="navbar"
     >
       <div className="flex flex-row ">
         {isOpen && (

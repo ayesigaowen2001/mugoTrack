@@ -6,8 +6,6 @@ import Filter from "./filter";
 import Image from "next/image"; // Use Next.js Image component
 import FilteredMapComponent from "./filteredMap";
 import Geofilter from "./geoFilter";
-//import GpsMonitoringComponent from "./notifications";
-//import RouteMap from "./gpsAnimation";
 
 const BasicMapComponent = dynamic(() => import("./location"), { ssr: false });
 const CreateTags = dynamic(() => import("./createTags"), { ssr: false });
@@ -17,6 +15,13 @@ const FilterAnimal = dynamic(() => import("./trackAnimal"), { ssr: false });
 const RouteMap = dynamic(() => import("./gpsAnimation"), { ssr: false });
 const Notifications = dynamic(() => import("./notifications"), { ssr: false });
 const GeoStatus = dynamic(() => import("./geoStatusMap"), { ssr: false });
+const Report = dynamic(() => import("./report"), { ssr: false });
+const ViewAccess = dynamic(() => import("./viewAccess"), { ssr: false });
+const AccountInformation = dynamic(() => import("./accountInformation"), {
+  ssr: false,
+});
+const Logout = dynamic(() => import("./logout"), { ssr: false });
+
 interface MainContentProps {
   selectedItem: string;
   setFilteredData: React.Dispatch<React.SetStateAction<any[]>>; // New prop
@@ -80,7 +85,7 @@ const MainContent: React.FC<MainContentProps> = ({
       case "View notifications":
         return <Notifications />;
       case "Report":
-        return <div>Analytics Report</div>;
+        return <Report />;
       case "Geo-Status":
         return (
           <>
@@ -88,6 +93,12 @@ const MainContent: React.FC<MainContentProps> = ({
             <GeoStatus geoData={geoLocations} />
           </>
         );
+      case "View access":
+        return <ViewAccess />;
+      case "Bio data":
+        return <AccountInformation />;
+      case "Logout":
+        return <Logout />;
       default:
         return <div>Content Not Available</div>;
     }
@@ -96,12 +107,13 @@ const MainContent: React.FC<MainContentProps> = ({
   return (
     <div
       style={{
-        height: "560.64px",
+        height: "h-full",
         width: isSidebarOpen ? "100%" : "calc(100% - 236.33px)",
         marginLeft: isSidebarOpen ? "5px" : "5px",
         background: "#FFFFFF",
         transition: "margin-left 0.3s ease, width 0.3s ease",
       }}
+      className="main-content"
     >
       {renderContent()}
     </div>

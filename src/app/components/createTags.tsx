@@ -1,19 +1,49 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-
-import { AiOutlineFileExcel } from "react-icons/ai";
-import * as XLSX from "xlsx";
+import { Button } from "primereact/button";
+import { fetchSpecies } from "@/src/services/speciesService"; // Import the service function
 import createTag from "@/src/services/createTagService";
 import Image from "next/image";
+import * as XLSX from "xlsx";
+
 const CreateTagPage: React.FC = () => {
   const [createTagData, setCreateTagData] = useState({
-    Species: "",
-    Gender: "",
-    Name: "",
+    species: "",
+    subspecies: "",
+    gender: "",
+    name: "",
   });
-  const [error, setError] = useState("");
+  const [speciesOptions, setSpeciesOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadSpecies = async () => {
+      try {
+        const speciesData = await fetchSpecies();
+        setSpeciesOptions(
+          speciesData.map((species: any) => ({
+            label: species.name,
+            value: species.name,
+            subspecies: species.subspecies.map((sub: any) => ({
+              label: sub,
+              value: `${species.name} - ${sub}`,
+            })),
+          }))
+        );
+      } catch (error) {
+        console.error("Error loading species data:", error);
+      }
+    };
+
+    loadSpecies();
+  }, []);
+
+  const handleSpeciesChange = (e: any) => {
+    const [species, subspecies] = e.value.split(" - ");
+    setCreateTagData({ ...createTagData, species, subspecies });
+  };
 
   const handleCreateTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,9 +63,10 @@ const CreateTagPage: React.FC = () => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData: Array<{
-          Species: string;
-          Gender: string;
-          Name: string;
+          species: string;
+          subspecies: string;
+          gender: string;
+          name: string;
         }> = XLSX.utils.sheet_to_json(worksheet);
         console.log("Parsed Excel Data:", jsonData);
 
@@ -43,7 +74,12 @@ const CreateTagPage: React.FC = () => {
         jsonData.forEach(async (tagData) => {
           try {
             setLoading(true);
-            const response = await createTag(tagData);
+            const response = await createTag({
+              Species: tagData.species,
+              Subspecies: tagData.subspecies,
+              Gender: tagData.gender,
+              Name: tagData.name,
+            });
             console.log("Tag created successfully:", response);
           } catch (err) {
             console.error("Error creating tag:", err);
@@ -61,21 +97,26 @@ const CreateTagPage: React.FC = () => {
 
   const handleSubmit = async () => {
     if (
-      !createTagData.Species ||
-      !createTagData.Gender ||
-      !createTagData.Name
+      !createTagData.species ||
+      !createTagData.subspecies ||
+      !createTagData.gender ||
+      !createTagData.name
     ) {
-      alert("Please enter Species, Gender, and Name.");
+      alert("Please enter Species, Subspecies, Gender, and Name.");
       return;
     }
 
     setLoading(true);
     try {
-      const data = await createTag(createTagData);
+      const data = await createTag({
+        Species: createTagData.species,
+        Subspecies: createTagData.subspecies,
+        Gender: createTagData.gender,
+        Name: createTagData.name,
+      });
       console.log("createTag successful:", data);
       alert("Tag created successfully!");
     } catch (err) {
-      setError(err as string);
       console.error("createTag failed:", err);
     } finally {
       setLoading(false);
@@ -83,61 +124,57 @@ const CreateTagPage: React.FC = () => {
   };
 
   return (
-    <div className="w-[950px] h-[620.20px] bg-white flex">
+    <div className="w-[950px] h-[620.20px] bg-white flex create-tag-page">
       <div className="w-[260.01px] h-[527.63px] relative">
         <div className="absolute top-[31.04px] text-[#3f9758] ml-10 text-[24.83px] font-bold font-['Inter']">
           Create Tag
         </div>
         <div className="ml-56 flex justify-center items-center">
-          {/* Species Input */}
+          {/* Species and Subspecies Dropdown */}
           <div className="absolute top-[130.97px] w-[260.01px] h-[37.11px] bg-white rounded-md border border-[#201c1c]">
-            <span className="p-float-label">
-              <InputText
-                id="Species"
-                name="Species"
-                value={createTagData.Species}
-                onChange={handleCreateTagChange}
-                className="w-[260.01px] h-[37.11px] px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
-              />
-              <label htmlFor="Species" className="text-[15.47px]">
-                Species
-              </label>
-            </span>
+            <Dropdown
+              value={`${createTagData.species} - ${createTagData.subspecies}`}
+              options={speciesOptions.flatMap((species) => [
+                { label: species.label, value: species.value, disabled: true },
+                ...species.subspecies,
+              ])}
+              onChange={handleSpeciesChange}
+              placeholder="Select Species and Subspecies"
+              className="w-full"
+            />
           </div>
 
-          {/* Gender Input */}
+          {/* Gender Dropdown */}
           <div className="absolute top-[200.97px] w-[260.01px] h-[37.11px] bg-white rounded-md border border-[#201c1c]">
-            <span className="p-float-label">
-              <InputText
-                id="Name"
-                name="Name"
-                value={createTagData.Name}
-                onChange={handleCreateTagChange}
-                className="w-[260.01px] h-[37.11px] px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
-              />
-              <label htmlFor="Name" className="text-[15.47px]">
-                Name
-              </label>
-            </span>
+            <Dropdown
+              value={createTagData.gender}
+              options={[
+                { label: "Male", value: "male" },
+                { label: "Female", value: "female" },
+              ]}
+              onChange={(e) =>
+                setCreateTagData({ ...createTagData, gender: e.value })
+              }
+              placeholder="Select Gender"
+              className="w-full"
+            />
           </div>
+
+          {/* Name Input */}
           <div className="absolute top-[270.97px] w-[260.01px] h-[37.11px] bg-white rounded-md border border-[#201c1c]">
-            <span className="p-float-label">
-              <InputText
-                id="Gender"
-                name="Gender"
-                value={createTagData.Gender}
-                onChange={handleCreateTagChange}
-                className="w-[260.01px] h-[37.11px] px-4 bg-white rounded-md border border-[#201c1c] focus:outline-none text-black text-[15.47px]"
-              />
-              <label htmlFor="Gender" className="text-[15.47px]">
-                Gender
-              </label>
-            </span>
+            <InputText
+              id="name"
+              name="name"
+              value={createTagData.name}
+              onChange={handleCreateTagChange}
+              placeholder="Enter Name"
+              className="w-full"
+            />
           </div>
 
           {/* Submit Button */}
           <div
-            className="absolute top-[350.53px] w-[96.23px] h-[27.94px] bg-[#3f9758] rounded-md border border-[#201c1c]"
+            className="absolute top-[340.53px] w-[96.23px] h-[27.94px] bg-[#3f9758] rounded-md border border-[#201c1c]"
             onClick={handleSubmit}
           >
             <div className="absolute flex text-base font-bold font-['Inter'] px-4">
@@ -166,11 +203,26 @@ const CreateTagPage: React.FC = () => {
             className="flex items-center cursor-pointer bg-white rounded-md  px-3 py-1 text-[#3f9758]"
             style={{ width: "50px" }}
           >
-            {/* <AiOutlineFileExcel className="mr-2 text-xl" /> */}
             Create multiple Tags
           </label>
         </div>
       </div>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .create-tag-page {
+            flex-direction: column;
+            align-items: center;
+          }
+          .create-tag-page > div {
+            width: 100%;
+            height: auto;
+          }
+          .create-tag-page .absolute {
+            position: static;
+            margin-bottom: 20px;
+          }
+        }
+      `}</style>
     </div>
   );
 };

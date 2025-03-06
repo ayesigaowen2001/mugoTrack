@@ -1,0 +1,48 @@
+/* Mobile devices (portrait and landscape) */
+@media (max-width: 767px) {
+  .main-content {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .mapContainer {
+    height: 300px !important;
+  }
+
+  .p-button {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+
+  .p-inputtext {
+    width: 100% !important;
+  }
+
+  .p-dropdown {
+    width: 100% !important;
+  }
+}
+
+/* Tablets (portrait and landscape) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .main-content {
+    width: calc(100% - 200px) !important;
+    margin-left: 5px !important;
+  }
+
+  .mapContainer {
+    height: 400px !important;
+  }
+}
+
+/* Desktops and larger screens */
+@media (min-width: 1024px) {
+  .main-content {
+    width: calc(100% - 236.33px) !important;
+    margin-left: 5px !important;
+  }
+
+  .mapContainer {
+    height: 430px !important;
+  }
+}

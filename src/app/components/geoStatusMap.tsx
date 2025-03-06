@@ -39,7 +39,24 @@ const GeoStatus: React.FC<RouteMapProps> = ({ geoData }) => {
 
         map.events.add("ready", () => {
           if (geoData.length > 0) {
-            const positions = geoData.map((point) => [
+            const latestLocations = geoData.reduce((acc, curr) => {
+              const existing = acc.find(
+                (item) => item.animal_number === curr.animal_number
+              );
+              if (
+                !existing ||
+                new Date(curr.timestamp) > new Date(existing.timestamp)
+              ) {
+                return acc
+                  .filter((item) => item.animal_number !== curr.animal_number)
+                  .concat(curr);
+              }
+              return acc;
+            }, [] as typeof geoData);
+
+            console.log("Filtered latest locations:", latestLocations); // Print the filtered latest locations
+
+            const positions = latestLocations.map((point) => [
               parseFloat(point.longitude),
               parseFloat(point.latitude),
             ]);

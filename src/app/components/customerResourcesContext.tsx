@@ -40,6 +40,10 @@ interface AnimalData {
 export interface UserData {
   customer_id: number | null; // Store the logged-in customer's ID
   access_token: string | null; // Store the access token for API calls
+  first_name?: string; // Add optional properties
+  last_name?: string;
+  email?: string;
+  contact?: string;
 }
 
 // Define the context type for AnimalContext
